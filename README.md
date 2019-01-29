@@ -7,6 +7,13 @@ Another cool thing: when I change config on one machine - I can push my changes 
 repo and apply this change on all other machines that I use simply by pulling chages
 from this repo.
 
+I use Arch Linux (it can be Debian if you don't like Arch, but nothing else, or you're wasted).
+I use Openbox running directly from .bash_profile. No any fancy desktop environments,
+no fancy login managers. Login from console, it starts X session with openbox.
+You can login with multiply user at the same time in first 5 ttys (CTRL+ALT+[1-5])
+
+93MB in cold start. Always hardcore, Linux Forever!
+
 # Usage
 
 ```bash
