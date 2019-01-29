@@ -49,5 +49,6 @@ fi
 #fi
 
 #xclock -geometry 50x50-1+1 &
+xscreensaver -no-splash &
 xterm &
 exec openbox

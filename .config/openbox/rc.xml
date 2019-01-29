@@ -249,6 +249,7 @@
   <!-- Keybindings for window switching -->
   <keybind key="A-Tab">
     <action name="NextWindow">
+      <raise>yes</raise>
       <finalactions>
         <action name="Focus"/>
         <action name="Raise"/>
@@ -308,7 +309,14 @@
       <command>gmrun</command>
     </action>
   </keybind>
-</keyboard>
+
+  <!-- Keybindings for lock screen -->
+  <keybind key="C-A-L">
+    <action name="Execute">
+      <command>xscreensaver-command -lock</command>
+    </action>
+  </keybind>
+</keyboard> 
 
 <mouse>
   <dragThreshold>1</dragThreshold>

@@ -8,6 +8,11 @@ USER_HOME=$HOME
 
 find "$CONFIGS_DIR/" -print0 | while IFS= read -r -d '' file
 do
+	if [[ $file == $CONFIGS_DIR/README.md ]] ;
+	then
+		continue
+	fi
+
 	if [[ $file == $CONFIGS_DIR/.git* ]] || [[ $file == $CONFIGS_DIR/bin* ]] || [[ -d "$file" ]] ;
 	then
 		continue
