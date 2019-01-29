@@ -2,27 +2,42 @@
 
 option=$1
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+if [[ -L "${BASH_SOURCE[0]}" ]] ;
+then
+	SCRIPT_SOURCE="$(readlink -f "${BASH_SOURCE[0]}")"
+else
+	SCRIPT_SOURCE="${BASH_SOURCE[0]}"
+fi
+
+SCRIPT_DIR="$( cd "$( dirname "$SCRIPT_SOURCE" )" >/dev/null 2>&1 && pwd )"
 CONFIGS_DIR="$(dirname "$SCRIPT_DIR")"
 USER_HOME=$HOME
+MISSING_CONFIGS="false"
 
-find "$CONFIGS_DIR/" -print0 | while IFS= read -r -d '' file
+while IFS= read -r -d '' file
 do
 	if [[ $file == $CONFIGS_DIR/README.md ]] ;
 	then
 		continue
 	fi
 
-	if [[ $file == $CONFIGS_DIR/.git* ]] || [[ $file == $CONFIGS_DIR/bin* ]] || [[ -d "$file" ]] ;
+	if [[ $file == $CONFIGS_DIR/.git* ]] || [[ -d "$file" ]] ;
 	then
 		continue
 	fi
 
-	config=${file#"$CONFIGS_DIR/"}
+	if [[ $file == $CONFIGS_DIR/bin/check.sh ]] ;
+	then
+		config="bin/multiuser-linux-configs-check.sh"
+	else
+		config=${file#"$CONFIGS_DIR/"}
+	fi
+
 	user_config="$USER_HOME/$config"
 	# check if config exists in the system and if its already a link to repo config file
 	if [[ ! -L "$user_config" ]] ;
 	then
+		MISSING_CONFIGS="true"
 		echo "WARNING: found config not linked to configuration repo: $config"
 		if [[ $option == "--fix" ]] ;
 		then
@@ -34,10 +49,17 @@ do
 			echo "REMOVE: $user_config"
 			rm "$user_config"
 			echo "LINK: $file -> $user_config"
+			mkdir -p "$(dirname "$user_config")"
 			ln -s "$file" "$user_config"
 			echo "---"
 		fi
 		
 	fi
-done
+done < <(find "$CONFIGS_DIR/" -print0)
 
+if [[ "$MISSING_CONFIGS" == "true" ]] ;
+then
+	echo ""
+	echo "TIP: run 'check.sh --fix' to automatically link user configs to repo configs; backup existing ones"
+	echo "It links check.sh to ~/bin/multiuser-linux-configs-check.sh, so you can run 'multiuser-linux-configs-check.sh' or 'multiuser-linux-configs-check.sh --fix', when its already linked"
+fi
