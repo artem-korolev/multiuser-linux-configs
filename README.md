@@ -132,4 +132,4 @@ Wtf you need any service if you don't use it? It's Retarded! :D
 
 ![Screenshot](images/screenshot.png)
 
-🤘💪🤣😍😍
+🤘💪🤣😍❤
