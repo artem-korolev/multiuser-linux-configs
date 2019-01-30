@@ -16,7 +16,7 @@ MISSING_CONFIGS="false"
 
 while IFS= read -r -d '' file
 do
-	if [[ $file == $CONFIGS_DIR/README.md ]] ;
+	if [[ $file == $CONFIGS_DIR/README.md ]] || [[ $file == $CONFIGS_DIR/images* ]] ;
 	then
 		continue
 	fi

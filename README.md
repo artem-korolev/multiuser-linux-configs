@@ -28,6 +28,7 @@ You can login with multiply user at the same time in first 5 ttys (CTRL+ALT+[1-5
 	* [custom .bashrc](#custom-bashrc)
 	* [Language switching](#language-switching)
 	* [VirtualBox additions](#virtualbox-additions)
+* [Screenshots](#screenshots)
 
 <!-- vim-markdown-toc -->
 
@@ -125,7 +126,11 @@ VBoxClient --help
 ;)
 ```
 
-Wtf you need any service if you don't use it? It's Retarded!
+Wtf you need any service if you don't use it? It's Retarded! :D
+
+## Screenshots
+
+![Screenshot](screenshot.png)
 
 <img alt="🤘" class="imga" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIBAMAAACnw650AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMFBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAD/yD3UjAL3wjrrsi3hnhJLOxKDZx8JQBRIAAAACHRSTlMA9BnThFLDljnic/8AAAEqSURBVEjH7ZUxS8NAFMeDVfcWCo5xcy4OjkKXjvoVnPoRXKul/VMhzq+1usppdtOIe0W/QKB7Sr9A3dqk1+SOu2sznpAfHPwhP/KOd/Ce41jNQbN67mqyxDWAuiaLHCHhSskSp+mHmpIlWnj8WaKrZIkL/NEL7pUscYIpjdBRsgQQEAFKLiUbJI5FEgvDMD20S6L8/Cfpl22ZBSZpzHL8wCB9v68rbvhkbwYpmlLGmBkkRgJREWlYoBw97b+4WUpb4G+tnc3cJxF/EVukZE6KknZmJhNXlCa66XuLB0n6QF+VzuCll5rxajHuVOkQWAhP9wVcajZQm/9qQ4yebpUdA/PMeQZutFuxjUEmvaKnXYpOBZ5QrWHYrwDl7XYNW1iSnFIySwKWSJawAqd6T6mrPXI9AAAAAElFTkSuQmCC">
 <img alt="💪" class="imga" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAA/UExURUdwTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/JOtePAMSaKqWBIuSsJfK9NH9iGC4iBEs5CU+7XwEAAAALdFJOUwA3/OYdb5H1zbBSdOgQEQAAAmtJREFUWMPtmNm2gyAMRa/IWFBA+f9vvQUnkEGgfex57NLdJJBD8O/vp069MB0BtyIjHroxiPJLgAPch4E+ZhPt4QyEx8LdHCOVFlZarja/5jrB0WGUuKTXnpCY5SwikHz/NLYue4IjtN0FjSC7YGZ7XU3TkaClN1bavqIOzklqB+EroMmpF2Qzk18AQdteWlyp7WoG2TVbj7VSH4BwYu27UrO7ev4CCPKrRL5U64ZE1+IHHNNqJMwv0c1HUHeJPnA21x8iCaKwv0QXhVDUbkXSB5HOswOcnf8ZKOiPT0C3/ugH0aBEdxBEjBKwH5mEMgRrLCQCDQyE+woAwIaqEvkgyHhSDNZYyAUaRp4ReVVYyAlCW1brMp+J63lZc0d5ZCEHCG2YyKZm40qFHy1kB20cmXA7dwBz8CpZyAXaOCnXtEG5Ot0qTu7PO1CRs5NYwUIO0ANnz24ou+y5xgWOEOYeEo0qWsVxyQF4K5FKgaQoaw39/N4fJ+iJI5Z3RKx4xJY4x3Cx50ZLJRKleDxQOM2ljliZ52gPZP8QlEr0flzn6qImFUQEHqeQbGY6mAvGoERzA2cSmWKT9BSSS8wLyC6/Z0r1IG3nOJ3dkGMxtemmQouw9GCUAikddQh7uDjUKLIRd9UzupUTG9t2uXpu0Wer3c+udW7Ni78yF9lq1LzmZku832XXmgSl2UaA5CwHz0lhUeW9vZSO7HDoMFJnKWt5iNijwuf88r5nRxB5UTh7uHhD7N37zSJnu5e1muVivDmk6jsHRJQXRdirenbH4xcoOwvR6NsGoZ1fbgaEGR0JAGSkDKP+zz8/Of0D9rh3+UhijhMAAAAASUVORK5CYII=">
