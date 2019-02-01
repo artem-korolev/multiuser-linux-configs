@@ -16,7 +16,7 @@ MISSING_CONFIGS="false"
 
 while IFS= read -r -d '' file
 do
-	if [[ $file == $CONFIGS_DIR/README.md ]] || [[ $file == $CONFIGS_DIR/images* ]] || [[ $file == $CONFIGS_DIR/LICENSE ]] ;
+	if [[ $file == $CONFIGS_DIR/README.md ]] || [[ $file == $CONFIGS_DIR/images* ]] || [[ $file == $CONFIGS_DIR/LICENSE ]] || [[ $file == $CONFIGS_DIR/fonts/* ]] || [[ $file == $CONFIGS_DIR/fontpatcher/* ]] ;
 	then
 		continue
 	fi
