@@ -316,6 +316,13 @@
       <command>xscreensaver-command -lock</command>
     </action>
   </keybind>
+
+  <keybind key="W-t">
+    <action name="Execute">
+      <command>guake-toggle</command>
+    </action>
+  </keybind>
+
 </keyboard> 
 
 <mouse>

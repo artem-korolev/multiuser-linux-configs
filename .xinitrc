@@ -50,5 +50,10 @@ fi
 
 #xclock -geometry 50x50-1+1 &
 xscreensaver -no-splash &
-xterm &
+st -f "Liberation Mono:size=12" &
+# guake &
+if [[ -f "$HOME/.xinitrc_local" ]] ;
+then
+	source "$HOME/.xinitrc_local"
+fi
 exec openbox
