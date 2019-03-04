@@ -1,3 +1,4 @@
 #!/bin/sh
 
-st -f "Liberation Mono:size=12"
+# st -f "WerfProFont for Powerline:size=12"
+konsole

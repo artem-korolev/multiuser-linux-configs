@@ -50,7 +50,7 @@ fi
 
 #xclock -geometry 50x50-1+1 &
 xscreensaver -no-splash &
-st -f "Liberation Mono:size=12" &
+konsole &
 # guake &
 if [[ -f "$HOME/.xinitrc_local" ]] ;
 then
