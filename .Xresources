@@ -1,6 +1,8 @@
 ! Oxide Color scheme
 ! Diki Ananta (https://github.com/dikiaap/dotfiles)
 
+xterm*faceName:xos4 Terminus:style=Regular:size=12
+
 #define oxide_00_black      #212121
 #define oxide_01_red        #e57373
 #define oxide_02_green      #a6bc69
