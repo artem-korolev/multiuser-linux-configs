@@ -34,6 +34,8 @@ zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/cache zroot/sys/arc
 zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/lib zroot/sys/archlinux/var/lib
 # /var/lib/docker
 zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/lib/docker zroot/sys/archlinux/var/lib/docker
+# /var/spool
+zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/spool zroot/sys/archlinux/var/spool
 # /var/spool/mail
 zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/spool/mail zroot/sys/archlinux/var/spool/mail
 
