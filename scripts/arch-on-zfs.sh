@@ -2,8 +2,9 @@
 
 echo "partitioning"
 parted --script /dev/sdb mklabel gpt mkpart primary 0% 200M mkpart primary 200M 100% set 1 boot on set 1 esp on
+partprobe
 echo "format esp (efi boot) partition to fat32"
-mkfs.fat -F16 /dev/sdb1
+mkfs.fat -F32 /dev/sdb1
 modprobe zfs
 echo "create zpool"
 zpool create -f -o ashift=12 -m /zroot zroot /dev/disk/by-id/ata-VBOX_HARDDISK_VB09aeb64a-c95d6fd9-part2
@@ -25,6 +26,8 @@ echo "creating arch linux system datasets"
 zfs create -o compression=lz4 -o mountpoint=/ zroot/sys/archlinux/ROOT/default
 # /boot
 zfs create -o compression=off -o mountpoint=/boot zroot/sys/archlinux/boot
+# /etc
+zfs create -o compression=gzip-9 -o mountpoint=/etc zroot/data/etc
 # /home
 zfs create -o compression=lz4 -o mountpoint=/home zroot/sys/archlinux/home
 # /repos
@@ -58,3 +61,9 @@ echo "export zroot"
 zpool export zroot
 echo "import zroot"
 zpool import -d /dev/disk/by-id -R /mnt zroot
+zpool set cachefile=/etc/zfs/zpool.cache zroot
+mkdir -p /mnt/etc/zfs/
+cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
+mkdir /mnt/efi
+mount /dev/sdb1 /mnt/efi
+genfstab -U -p /mnt >> /mnt/etc/fstab
