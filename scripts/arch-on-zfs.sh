@@ -1,16 +1,25 @@
 #!/bin/bash
 
-parted --script /dev/sdb mklabel gpt mkpart non-fs 0% 200M mkpart primary 200M 100% set 1 bios_grub on set 2 boot on
+echo "partitioning"
+parted --script /dev/sdb mklabel gpt mkpart primary 0% 200M mkpart primary 200M 100% set 1 boot on set 1 esp on
+echo "format esp (efi boot) partition to fat32"
+mkfs.fat -F16 /dev/sdb1
 modprobe zfs
-zpool create -f -o ashift=12 -m /zroot zroot /dev/disk/by-id/ata-VBOX_HARDDISK_VB09aeb64a-c95d6fd9
+echo "create zpool"
+zpool create -f -o ashift=12 -m /zroot zroot /dev/disk/by-id/ata-VBOX_HARDDISK_VB09aeb64a-c95d6fd9-part2
 # create swap for target system
+echo "creating swap"
 zfs create -V 64G -b $(getconf PAGESIZE) -o logbias=throughput -o sync=always -o primarycache=metadata -o com.sun:auto-snapshot=false zroot/archlinux-swap
+
+echo "creating sys/data datasets"
+# create sys and data datasets
 zfs set atime=on zroot
 zfs set relatime=on zroot
 zfs create -o mountpoint=none -p zroot/sys/archlinux
 zfs create -o mountpoint=none zroot/data
 zfs create -o mountpoint=none zroot/sys/archlinux/ROOT
 
+echo "creating arch linux system datasets"
 # creating system datasets
 # /
 zfs create -o compression=lz4 -o mountpoint=/ zroot/sys/archlinux/ROOT/default
@@ -43,7 +52,9 @@ zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/spool zroot/sys/arc
 # /var/spool/mail
 zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/spool/mail zroot/sys/archlinux/var/spool/mail
 
+echo "mark boot dataset"
 zpool set bootfs=zroot/sys/archlinux/ROOT/default zroot
+echo "export zroot"
 zpool export zroot
+echo "import zroot"
 zpool import -d /dev/disk/by-id -R /mnt zroot
-
