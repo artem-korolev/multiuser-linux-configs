@@ -3,8 +3,6 @@
 parted --script /dev/sdb mklabel gpt mkpart non-fs 0% 200M mkpart primary 200M 100% set 1 bios_grub on set 2 boot on
 modprobe zfs
 zpool create -f -o ashift=12 -m /zroot zroot /dev/disk/by-id/ata-VBOX_HARDDISK_VB09aeb64a-c95d6fd9
-zpool status
-zpool list
 # create swap for target system
 zfs create -V 64G -b $(getconf PAGESIZE) -o logbias=throughput -o sync=always -o primarycache=metadata -o com.sun:auto-snapshot=false zroot/archlinux-swap
 zfs set atime=on zroot
@@ -12,16 +10,16 @@ zfs set relatime=on zroot
 zfs create -o mountpoint=none -p zroot/sys/archlinux
 zfs create -o mountpoint=none zroot/data
 zfs create -o mountpoint=none zroot/sys/archlinux/ROOT
-zpool import
-zpool status -v
 
 # creating system datasets
 # /
 zfs create -o compression=lz4 -o mountpoint=/ zroot/sys/archlinux/ROOT/default
+# /boot
+zfs create -o compression=off -o mountpoint=/boot zroot/sys/archlinux/boot
 # /home
 zfs create -o compression=lz4 -o mountpoint=/home zroot/sys/archlinux/home
 # /repos
-zfs create -o compression=gzip-9 -o mountpoint=/repos zroot/sys/archlinux/repos
+zfs create -o compression=gzip-9 -o mountpoint=/repos zroot/data/repos
 # /usr
 zfs create -o compression=lz4 -o mountpoint=/usr zroot/sys/archlinux/usr
 # /usr/local
