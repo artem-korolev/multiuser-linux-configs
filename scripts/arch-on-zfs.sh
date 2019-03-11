@@ -2,6 +2,9 @@
 
 HDD=/dev/sdb
 
+loadkeys us
+timedatectl set-ntp true
+
 
 echo -e "\n[archzfs]\nServer = http://archzfs.com/\$repo/x86_64\n" >> /etc/pacman.conf
 pacman-key --recv-keys F75D9D76
@@ -92,9 +95,6 @@ mkdir /mnt/efi
 mount /dev/sdb1 /mnt/efi
 genfstab -U -p /mnt >> /mnt/etc/fstab
 pacstrap /mnt base base-devel zfs-linux
-loadkeys de-latin1
-timedatectl set-ntp true
-
 arch-chroot /mnt
 
 #/tmp/root.x86_64/bin/arch-chroot /tmp/root.x86_64/
