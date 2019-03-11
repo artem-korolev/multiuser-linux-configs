@@ -1,10 +1,21 @@
 #!/bin/bash
 
+HDD=/dev/sdb
+
+
+echo "\
+[archzfs]\
+Server = http://archzfs.com/\$repo/x86_64" >> /etc/pacman.conf
+pacman-key --recv-keys F75D9D76
+pacman-key --lsign-key F75D9D76
+pacman -S zfs-linux
+
+
 echo "partitioning"
-parted --script /dev/sdb mklabel gpt mkpart primary 0% 200M mkpart primary 200M 100% set 1 boot on set 1 esp on
+parted --script ${HDD} mklabel gpt mkpart primary 0% 200M mkpart primary 200M 100% set 1 boot on set 1 esp on
 partprobe
 echo "format esp (efi boot) partition to fat32"
-mkfs.fat -F32 /dev/sdb1
+mkfs.fat -F32 ${HDD}1
 modprobe zfs
 echo "create zpool"
 zpool create -f -o ashift=12 -m /zroot zroot /dev/disk/by-id/ata-VBOX_HARDDISK_VB09aeb64a-c95d6fd9-part2
@@ -58,26 +69,30 @@ zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/spool/mail zroot/sy
 echo "mark boot dataset"
 zpool set bootfs=zroot/sys/archlinux/ROOT/default zroot
 cd /tmp
-curl https://mirror.fi.armbrust.me/archlinux/iso/2019.03.01/archlinux-bootstrap-2019.03.01-x86_64.tar.gz -o archlinux-bootstrap-2019.03.01-x86_64.tar.gz
-tar xzf archlinux-bootstrap-2019.03.01-x86_64.tar.gz
-/tmp/root.x86_64/bin/arch-chroot /tmp/root.x86_64/
-echo "Run: zpool export zroot"
-echo "Run: zpool import -d /dev/disk/by-id -R /mnt zroot"
-echo "Run: zpool set cachefile=/etc/zfs/zpool.cache zroot"
-echo "Run: mkdir -p /mnt/etc/zfs/"
-echo "Run: cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache"
-echo "Run: mkdir /mnt/efi"
-echo "Run: mount /dev/sdb1 /mnt/efi"
-echo "Run: genfstab -U -p /mnt >> /mnt/etc/fstab"a
-#echo "export zroot"
-#zpool export zroot
-#echo "import zroot"
-#zpool import -d /dev/disk/by-id -R /mnt zroot
-#zpool set cachefile=/etc/zfs/zpool.cache zroot
-#mkdir -p /mnt/etc/zfs/
-#cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
-#mkdir /mnt/efi
-#mount /dev/sdb1 /mnt/efi
-#genfstab -U -p /mnt >> /mnt/etc/fstab
+#curl https://mirror.fi.armbrust.me/archlinux/iso/2019.03.01/archlinux-bootstrap-2019.03.01-x86_64.tar.gz -o archlinux-bootstrap-2019.03.01-x86_64.tar.gz
+#tar xzf archlinux-bootstrap-2019.03.01-x86_64.tar.gz
+#echo "Run: zpool export zroot"
+#echo "Run: zpool import -d /dev/disk/by-id -R /mnt zroot"
+#echo "Run: zpool set cachefile=/etc/zfs/zpool.cache zroot"
+#echo "Run: mkdir -p /mnt/etc/zfs/"
+#echo "Run: cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache"
+#echo "Run: mkdir /mnt/efi"
+#echo "Run: mount /dev/sdb1 /mnt/efi"
+#echo "Run: genfstab -U -p /mnt >> /mnt/etc/fstab"a
+echo "export zroot"
+zpool export zroot
+echo "import zroot"
+zpool import -d /dev/disk/by-id -R /mnt zroot
+zpool set cachefile=/etc/zfs/zpool.cache zroot
+mkdir -p /mnt/etc/zfs/
+cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
+mkdir /mnt/efi
+mount /dev/sdb1 /mnt/efi
+genfstab -U -p /mnt >> /mnt/etc/fstab
+pacstrap /mnt base base-devel zfs-linux
+loadkeys de-latin1
+timedatectl set-ntp true
 
-/tmp/root.x86_64/bin/arch-chroot /tmp/root.x86_64/
+arch-chroot /mnt
+
+#/tmp/root.x86_64/bin/arch-chroot /tmp/root.x86_64/
