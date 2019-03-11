@@ -65,17 +65,6 @@ zfs create -o compression=lz4 -o xattr=sa -o mountpoint=/var/spool/mail zroot/sy
 
 echo "mark boot dataset"
 zpool set bootfs=zroot/sys/archlinux/ROOT/default zroot
-cd /tmp
-#curl https://mirror.fi.armbrust.me/archlinux/iso/2019.03.01/archlinux-bootstrap-2019.03.01-x86_64.tar.gz -o archlinux-bootstrap-2019.03.01-x86_64.tar.gz
-#tar xzf archlinux-bootstrap-2019.03.01-x86_64.tar.gz
-#echo "Run: zpool export zroot"
-#echo "Run: zpool import -d /dev/disk/by-id -R /mnt zroot"
-#echo "Run: zpool set cachefile=/etc/zfs/zpool.cache zroot"
-#echo "Run: mkdir -p /mnt/etc/zfs/"
-#echo "Run: cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache"
-#echo "Run: mkdir /mnt/efi"
-#echo "Run: mount /dev/sdb1 /mnt/efi"
-#echo "Run: genfstab -U -p /mnt >> /mnt/etc/fstab"a
 echo "export zroot"
 zpool export zroot
 echo "import zroot"
@@ -84,7 +73,7 @@ zpool set cachefile=/etc/zfs/zpool.cache zroot
 mkdir -p /mnt/etc/zfs/
 cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
 mkdir /mnt/efi
-mount /dev/sdb1 /mnt/efi
+mount ${HDD}1 /mnt/efi
 genfstab -U -p /mnt >> /mnt/etc/fstab
 pacstrap /mnt base
 arch-chroot /mnt
