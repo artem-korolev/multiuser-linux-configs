@@ -6,6 +6,7 @@ HDD=/dev/sdb
 echo -e "\n[archzfs]\nServer = http://archzfs.com/\$repo/x86_64\n" >> /etc/pacman.conf
 pacman-key --recv-keys F75D9D76
 pacman-key --lsign-key F75D9D76
+pacman -Sy
 pacman -S zfs-dkms
 modprobe zfs
 
