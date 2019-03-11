@@ -3,12 +3,13 @@
 HDD=/dev/sdb
 
 
-echo "\
-[archzfs]\
-Server = http://archzfs.com/\$repo/x86_64" >> /etc/pacman.conf
+echo -e "\n[archzfs]\nServer = http://archzfs.com/\$repo/x86_64\n" >> /etc/pacman.conf
 pacman-key --recv-keys F75D9D76
 pacman-key --lsign-key F75D9D76
-pacman -S zfs-linux
+pacman -S zfs-dkms
+modprobe zfs
+
+exit 0
 
 
 echo "partitioning"
