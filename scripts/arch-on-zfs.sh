@@ -1,20 +1,12 @@
 #!/bin/bash
 
-HDD=/dev/sdb
+HDD=/dev/sda
 
+dhclient
 loadkeys us
 timedatectl set-ntp true
 
-
-echo -e "\n[archzfs]\nServer = http://archzfs.com/\$repo/x86_64\n" >> /etc/pacman.conf
-pacman-key --recv-keys F75D9D76
-pacman-key --lsign-key F75D9D76
-pacman -Sy
-pacman -S zfs-dkms
 modprobe zfs
-
-exit 0
-
 
 echo "partitioning"
 parted --script ${HDD} mklabel gpt mkpart primary 0% 200M mkpart primary 200M 100% set 1 boot on set 1 esp on
@@ -94,7 +86,7 @@ cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
 mkdir /mnt/efi
 mount /dev/sdb1 /mnt/efi
 genfstab -U -p /mnt >> /mnt/etc/fstab
-pacstrap /mnt base base-devel zfs-linux
+pacstrap /mnt base
 arch-chroot /mnt
 
 #/tmp/root.x86_64/bin/arch-chroot /tmp/root.x86_64/
