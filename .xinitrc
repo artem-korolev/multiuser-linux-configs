@@ -49,7 +49,21 @@ fi
 #fi
 
 #xclock -geometry 50x50-1+1 &
-xscreensaver -no-splash &
+#xscreensaver -no-splash &
+xclock -d -twentyfour -update 1 &
+
+# Skippy-xd
+# skippy-xd-toggle
+
+# Conky - system monitor
+sh "$HOME/.conky/conky-startup.sh"
+#killall conky
+#cd "$HOME/.conky/Green Apple Desktop"
+#conky -u 5 -c "$HOME/.conky/Green Apple Desktop/Gotham" &
+#cd "$HOME/.conky/Green Apple Desktop"
+#conky -u 5 -c "$HOME/.conky/Green Apple Desktop/conky_seamod" &
+
+#gis-weather &
 konsole &
 # guake &
 if [[ -f "$HOME/.xinitrc_local" ]] ;
