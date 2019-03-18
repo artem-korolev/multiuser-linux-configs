@@ -56,7 +56,7 @@ xclock -d -twentyfour -update 1 &
 # skippy-xd-toggle
 
 # Conky - system monitor
-sh "$HOME/.conky/conky-startup.sh"
+#sh "$HOME/.conky/conky-startup.sh"
 #killall conky
 #cd "$HOME/.conky/Green Apple Desktop"
 #conky -u 5 -c "$HOME/.conky/Green Apple Desktop/Gotham" &
