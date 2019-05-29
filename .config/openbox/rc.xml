@@ -801,6 +801,10 @@
       <skip_taskbar>yes</skip_taskbar>
       <shade>no</shade>
       <focus>no</focus>
+      <position force="yes">
+        <x>0</x>
+        <y>0</y>
+      </position>
     </application>
     <application class="conky">
       <desktop>all</desktop>

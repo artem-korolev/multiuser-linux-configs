@@ -71,3 +71,6 @@ then
 	source "$HOME/.xinitrc_local"
 fi
 exec openbox
+#exec kwin_x11
+#exec sway
+#exec i3

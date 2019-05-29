@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/opt/Qt/Tools/Preview/Qt\ Creator\ 4.9.0-beta2/bin/qtcreator.sh
