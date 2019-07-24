@@ -50,7 +50,7 @@ fi
 
 #xclock -geometry 50x50-1+1 &
 #xscreensaver -no-splash &
-xclock -d -twentyfour -update 1 &
+#xclock -d -twentyfour -update 1 &
 
 # Skippy-xd
 # skippy-xd-toggle
@@ -64,13 +64,13 @@ xclock -d -twentyfour -update 1 &
 #conky -u 5 -c "$HOME/.conky/Green Apple Desktop/conky_seamod" &
 
 #gis-weather &
-konsole &
+#konsole &
 # guake &
 if [[ -f "$HOME/.xinitrc_local" ]] ;
 then
 	source "$HOME/.xinitrc_local"
 fi
-exec openbox
+exec /opt/openbox-3.6.1/bin/openbox
 #exec kwin_x11
 #exec sway
 #exec i3
