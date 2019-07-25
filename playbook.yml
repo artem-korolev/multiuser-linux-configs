@@ -1,0 +1,10 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: Copy all configs to user home directory
+    synchronize:
+      src: configs/
+      dest: "~"
+      owner: no
+
