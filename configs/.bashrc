@@ -5,10 +5,25 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+
+function detect_repo() {
+	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+ 	if [ ! "${BRANCH}" == "" ]
+ 	then
+		ORANGE='\033[0;32m'
+		NC='\033[0m' # No Color
+		echo ", Branch: [${ORANGE}${BRANCH}${NC}]"
+	else
+		echo ""
+	fi
+}
+
 alias ls='ls --color=auto'
 alias ll='ls -l'
+alias l='ls -lA'
+alias la='ls -la'
 PS1='[\u@\h \W]\$ '
-export PS1="\n\d \t\n[\[\e[32m\]\u\[\e[m\]@\[\e[34m\]\h\[\e[m\]: \[\e[33m\]\w\[\e[m\]]\n\\$ "
+export PS1="\n\d \t\`detect_repo\`\n[\[\e[32m\]\u\[\e[m\]@\[\e[34m\]\h\[\e[m\]: \[\e[33m\]\w\[\e[m\]]\n\\$ "
 export PATH=$HOME/bin:$PATH
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true'
 
