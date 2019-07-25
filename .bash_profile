@@ -4,7 +4,8 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-if [[ ! $DISPLAY && $XDG_VTNR -le 5 ]]; then
+TTY_NUMBER=$(tty | grep -o -E '[0-9]+$')
+if [[ ! $DISPLAY && $TTY_NUMBER -le 4 ]]; then
 	exec startx
 	#exec weston
 fi
