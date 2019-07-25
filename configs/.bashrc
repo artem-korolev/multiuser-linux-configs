@@ -8,6 +8,7 @@
 alias ls='ls --color=auto'
 alias ll='ls -l'
 PS1='[\u@\h \W]\$ '
+export PS1="\n\d \t\n[\[\e[32m\]\u\[\e[m\]@\[\e[34m\]\h\[\e[m\]: \[\e[33m\]\w\[\e[m\]]\n\\$ "
 export PATH=$HOME/bin:$PATH
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true'
 
