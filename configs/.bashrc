@@ -7,12 +7,17 @@
 
 
 function detect_repo() {
-	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
- 	if [ ! "${BRANCH}" == "" ]
- 	then
-		ORANGE='\033[0;32m'
-		NC='\033[0m' # No Color
-		echo ", Branch: [${ORANGE}${BRANCH}${NC}]"
+	if [ -d ".git" ]
+	then
+		BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+ 		if [ ! "${BRANCH}" == "" ]
+ 		then
+			ORANGE='\033[0;32m'
+			NC='\033[0m' # No Color
+			echo ", Branch: [${ORANGE}${BRANCH}${NC}]"
+		else
+			echo ""
+		fi
 	else
 		echo ""
 	fi
