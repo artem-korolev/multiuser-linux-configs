@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# st -f "WerfProFont for Powerline:size=12"
-konsole
