@@ -15,7 +15,7 @@ USER_HOME=$HOME
 MISSING_CONFIGS="false"
 
 # install bash-it if its not in $HOME/.bash_it
-[[ -d "$HOME/.bash_it" ]] || (git clone --depth=1 https://github.com/Bash-it/bash-it.git "$HOME/.bash_it" && source "$HOME/.bash_it/install.sh")
+[[ -d "$HOME/.bash_it" ]] || (git clone --depth=1 https://github.com/Bash-it/bash-it.git "$HOME/.bash_it" && source "$HOME/.bash_it/install.sh" --silent)
 bash-it update
 
 while IFS= read -r -d '' file
