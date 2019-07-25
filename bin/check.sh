@@ -14,6 +14,10 @@ CONFIGS_DIR="$(dirname "$SCRIPT_DIR")"
 USER_HOME=$HOME
 MISSING_CONFIGS="false"
 
+# install bash-it if its not in $HOME/.bash_it
+[[ -d dir ]] || git clone --depth=1 https://github.com/Bash-it/bash-it.git "$HOME/.bash_it" && source "$HOME/.bash_it/install.sh"
+bash-it update
+
 while IFS= read -r -d '' file
 do
 	if [[ $file == $CONFIGS_DIR/README.md ]] || [[ $file == $CONFIGS_DIR/images* ]] || [[ $file == $CONFIGS_DIR/LICENSE ]] || [[ $file == $CONFIGS_DIR/fonts/* ]] || [[ $file == $CONFIGS_DIR/fontpatcher/* ]] ;
