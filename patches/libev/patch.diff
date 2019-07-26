@@ -1,0 +1,16 @@
+Index: ev_port.c
+===================================================================
+RCS file: /schmorpforge/libev/ev_port.c,v
+retrieving revision 1.32
+diff -u -r1.32 ev_port.c
+--- ev_port.c	7 Jul 2019 06:00:32 -0000	1.32
++++ ev_port.c	25 Jul 2019 21:48:05 -0000
+@@ -70,7 +70,7 @@
+     {
+       if (errno == EBADFD)
+         {
+-          assert (("libev: port_associate found invalid fd", errno != EBADFD);
++          assert (("libev: port_associate found invalid fd", errno != EBADFD));
+           fd_kill (EV_A_ fd);
+         }
+       else

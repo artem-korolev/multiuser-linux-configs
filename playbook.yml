@@ -7,4 +7,99 @@
       src: configs/
       dest: "~"
       owner: no
+  - name: install autoconf
+    package:
+      name: autoconf
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install automake
+    package:
+      name: automake
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install cvs
+    package:
+      name: cvs
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install libtool
+    package:
+      name: libtool
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install libxcb
+    package:
+      name: libxcb
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install xorg-macros
+    package:
+      name: xorg-macros
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install xcb-util
+    package:
+      name: xcb-util
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install gcc-7
+    package:
+      name: gcc-7
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+ 
+  # BUILD libev from source, if its not installed
+  - stat:
+      path: /opt/libev
+    register: libev_dir
+  - debug:
+      msg: "libev is build and installed already"
+    when: libev_dir.stat.isdir is defined and libev_dir.stat.isdir
+  - name: clean build dir for libev
+    file: path=/tmp/libev state=absent
+    when: not libev_dir.stat.exists
+  - name: build libev from source
+    shell: cd /tmp && cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev && cd /tmp/libev && patch -p0 < "{{playbook_dir}}/patches/libev/patch.diff" && libtoolize --force && aclocal && autoheader && automake --force-missing --add-missing && autoconf && PATH="/opt/developerstudio12.6/bin/:$PATH" ./configure --prefix /opt/libev && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
+    when: not libev_dir.stat.exists
 
+  # BUILD xcb-util-xrm from source, if its not installed
+  - stat:
+      path: /opt/xcb-util-xrm
+    register: xcb_util_xrm_dir
+  - debug:
+      msg: "xcb-util-xrm is build and installed already"
+    when: xcb_util_xrm_dir.stat.isdir is defined and xcb_util_xrm_dir.stat.isdir
+  - name: clean build dir for xcb-util-xrm
+    file: path=/tmp/xcb-util-xrm state=absent
+    when: not xcb_util_xrm_dir.stat.exists
+  - name: build xcb-xrm
+#    shell: export SED=/usr/xpg4/bin/sed && cd /tmp && git clone --recursive https://github.com/Airblader/xcb-util-xrm.git && cd /tmp/xcb-util-xrm && libtoolize --force && aclocal && automake --force-missing --add-missing && autoreconf && PATH="/opt/developerstudio12.6/bin/:$PATH" ./configure --prefix /opt/xcb-util-xrm && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
+    shell: export SED=/usr/xpg4/bin/sed && cd /tmp && git clone --recursive https://github.com/Airblader/xcb-util-xrm.git && cd /tmp/xcb-util-xrm && automake --force-missing --add-missing && autoreconf && PATH="/opt/developerstudio12.6/bin/:$PATH" ./configure --prefix /opt/xcb-util-xrm && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
+    when: not xcb_util_xrm_dir.stat.exists
+
+  - name: install i3-gaps
+    shell: rm -Rf /tmp/i3-gaps && cd /tmp && git clone https://www.github.com/Airblader/i3 i3-gaps && cd /tmp/i3-gaps && autoreconf --force --install && rm -rf build/ && mkdir -p build && cd build/ && LDFLAGS='-L/opt/libev/lib' PATH="/opt/developerstudio12.6/bin/:$PATH" ../configure --prefix=/opt/i3-gaps --sysconfdir=/etc --disable-sanitizers && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
