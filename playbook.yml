@@ -96,10 +96,19 @@
   - name: clean build dir for xcb-util-xrm
     file: path=/tmp/xcb-util-xrm state=absent
     when: not xcb_util_xrm_dir.stat.exists
-  - name: build xcb-xrm
-#    shell: export SED=/usr/xpg4/bin/sed && cd /tmp && git clone --recursive https://github.com/Airblader/xcb-util-xrm.git && cd /tmp/xcb-util-xrm && libtoolize --force && aclocal && automake --force-missing --add-missing && autoreconf && PATH="/opt/developerstudio12.6/bin/:$PATH" ./configure --prefix /opt/xcb-util-xrm && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
-    shell: export SED=/usr/xpg4/bin/sed && cd /tmp && git clone --recursive https://github.com/Airblader/xcb-util-xrm.git && cd /tmp/xcb-util-xrm && automake --force-missing --add-missing && autoreconf && PATH="/opt/developerstudio12.6/bin/:$PATH" ./configure --prefix /opt/xcb-util-xrm && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
+  - name: build xcb-util-xrm
+    shell: cd /tmp && git clone --recursive https://github.com/Airblader/xcb-util-xrm.git && cd /tmp/xcb-util-xrm && git submodule update --init && PATH="/usr/gnu/bin/:$PATH" ./autogen.sh --prefix=/opt/xcb-util-xrm && PATH="/usr/gnu/bin/:$PATH" make && PATH="/usr/gnu/bin/:$PATH" sudo -H make install
     when: not xcb_util_xrm_dir.stat.exists
 
+  # BUILD i3-gaps from source, if its not installed
+  - stat:
+      path: /opt/i3-gaps
+    register: i3_gaps_dir
+  - debug:
+      msg: "i3-gaps is build and installed already"
+    when: i3_gaps_dir.stat.isdir is defined and i3_gaps_dir.stat.isdir
+  - name: clean build dir for i3-gaps
+    file: path=/tmp/i3-gaps state=absent
+    when: not i3_gaps_dir.stat.exists
   - name: install i3-gaps
-    shell: rm -Rf /tmp/i3-gaps && cd /tmp && git clone https://www.github.com/Airblader/i3 i3-gaps && cd /tmp/i3-gaps && autoreconf --force --install && rm -rf build/ && mkdir -p build && cd build/ && LDFLAGS='-L/opt/libev/lib' PATH="/opt/developerstudio12.6/bin/:$PATH" ../configure --prefix=/opt/i3-gaps --sysconfdir=/etc --disable-sanitizers && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
+    shell: rm -Rf /tmp/i3-gaps && cd /tmp && git clone https://www.github.com/Airblader/i3 i3-gaps && cd /tmp/i3-gaps && git checkout release-4.16.1 && autoreconf --force --install && rm -rf build/ && mkdir -p build && cd build/ && LDFLAGS='-L/opt/libev/lib -L/opt/xcb-util-xrm/lib' PATH="/opt/developerstudio12.6/bin/:$PATH" ../configure --prefix=/opt/i3-gaps --sysconfdir=/etc --disable-sanitizers && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
