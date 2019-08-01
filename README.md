@@ -1,7 +1,7 @@
 # multiuser-linux-config
 
 Collection of configurations for programs that I use.
-Idea is to have it in repo, so when I install linux on another machine I can
+Idea is to have it in repo, so when I install Solaris on another machine I can
 confugure it sipmly by fetching this repo and running one command.
 Another cool thing: when I change config on one machine - I can push my changes to
 repo and apply this change on all other machines that I use simply by pulling chages
