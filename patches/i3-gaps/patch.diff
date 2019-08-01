@@ -1,0 +1,127 @@
+diff --git a/i3-config-wizard/main.c b/i3-config-wizard/main.c
+index 7c1f00a3..37ec3b78 100644
+--- a/i3-config-wizard/main.c
++++ b/i3-config-wizard/main.c
+@@ -151,6 +151,24 @@ struct stack_entry {
+ /* 10 entries should be enough for everybody. */
+ static struct stack_entry stack[10];
+ 
++static int mkdirp(const char *dir, mode_t mode) {
++        char tmp[256];
++        char *p = NULL;
++        size_t len;
++
++        snprintf(tmp, sizeof(tmp),"%s",dir);
++        len = strlen(tmp);
++        if(tmp[len - 1] == '/')
++                tmp[len - 1] = 0;
++        for(p = tmp + 1; *p; p++)
++                if(*p == '/') {
++                        *p = 0;
++                        mkdir(tmp, mode);
++                        *p = '/';
++                }
++        return mkdir(tmp, mode);
++}
++
+ /*
+  * Pushes a string (identified by 'identifier') on the stack. We simply use a
+  * single array, since the number of entries we have to store is very small.
+diff --git a/i3bar/src/main.c b/i3bar/src/main.c
+index 26ea0eeb..50db504d 100644
+--- a/i3bar/src/main.c
++++ b/i3bar/src/main.c
+@@ -45,14 +45,18 @@ void debuglog(char *fmt, ...) {
+  *
+  */
+ static char *expand_path(char *path) {
+-    static glob_t globbuf;
+-    if (glob(path, GLOB_NOCHECK | GLOB_TILDE, NULL, &globbuf) < 0) {
+-        ELOG("glob() failed\n");
+-        exit(EXIT_FAILURE);
++    char *home, *result = NULL;
++
++    if (strncmp(path, "~/", 2) == 0) {
++        home = getenv("HOME");
++        if (home != NULL) {
++            result = scalloc(strlen(home) + strlen(path) + 1, 1);
++            strcpy(result, home);
++            strcat(result, path+1);
++            return result;
++        }
+     }
+-    char *result = sstrdup(globbuf.gl_pathc > 0 ? globbuf.gl_pathv[0] : path);
+-    globfree(&globbuf);
+-    return result;
++    return sstrdup(path);
+ }
+ 
+ static void print_usage(char *elf_name) {
+diff --git a/include/all.h b/include/all.h
+index e93b066b..78573f29 100644
+--- a/include/all.h
++++ b/include/all.h
+@@ -84,3 +84,21 @@
+ #include "restore_layout.h"
+ #include "sync.h"
+ #include "main.h"
++
++static int mkdirp(const char *dir, mode_t mode) {
++        char tmp[256];
++        char *p = NULL;
++        size_t len;
++
++        snprintf(tmp, sizeof(tmp),"%s",dir);
++        len = strlen(tmp);
++        if(tmp[len - 1] == '/')
++                tmp[len - 1] = 0;
++        for(p = tmp + 1; *p; p++)
++                if(*p == '/') {
++                        *p = 0;
++                        mkdir(tmp, mode);
++                        *p = '/';
++                }
++        return mkdir(tmp, mode);
++}
+diff --git a/libi3/resolve_tilde.c b/libi3/resolve_tilde.c
+index 6dbf132f..c87a70f4 100644
+--- a/libi3/resolve_tilde.c
++++ b/libi3/resolve_tilde.c
+@@ -19,28 +19,16 @@
+  *
+  */
+ char *resolve_tilde(const char *path) {
+-    static glob_t globbuf;
+-    char *head, *tail, *result;
++    char *home, *result = NULL;
+ 
+-    tail = strchr(path, '/');
+-    head = sstrndup(path, tail ? (size_t)(tail - path) : strlen(path));
+-
+-    int res = glob(head, GLOB_TILDE, NULL, &globbuf);
+-    free(head);
+-    /* no match, or many wildcard matches are bad */
+-    if (res == GLOB_NOMATCH || globbuf.gl_pathc != 1)
+-        result = sstrdup(path);
+-    else if (res != 0) {
+-        err(EXIT_FAILURE, "glob() failed");
+-    } else {
+-        head = globbuf.gl_pathv[0];
+-        result = scalloc(strlen(head) + (tail ? strlen(tail) : 0) + 1, 1);
+-        strcpy(result, head);
+-        if (tail) {
+-            strcat(result, tail);
++    if (strncmp(path, "~/", 2) == 0) {
++        home = getenv("HOME");
++        if (home != NULL) {
++            result = scalloc(strlen(home) + strlen(path) + 1, 1);
++            strcpy(result, home);
++            strcat(result, path+1);
++            return result;
+         }
+     }
+-    globfree(&globbuf);
+-
+-    return result;
++    return sstrdup(path);
+ }
