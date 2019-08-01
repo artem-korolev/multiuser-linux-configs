@@ -1,0 +1,17 @@
+[/]
+list=['7ed9249f-2a9a-4935-b55f-c7b2a90df14d', '7783459e-8045-4389-8a0b-a0bd7c5b29a0']
+default='7783459e-8045-4389-8a0b-a0bd7c5b29a0'
+
+[:7ed9249f-2a9a-4935-b55f-c7b2a90df14d]
+visible-name='Default'
+
+[:7783459e-8045-4389-8a0b-a0bd7c5b29a0]
+foreground-color='rgb(248,248,242)'
+visible-name='Custom'
+palette=['rgb(46,52,54)', 'rgb(255,108,96)', 'rgb(78,154,6)', 'rgb(196,160,0)', 'rgb(52,101,164)', 'rgb(117,80,123)', 'rgb(6,152,154)', 'rgb(211,215,207)', 'rgb(85,87,83)', 'rgb(239,41,41)', 'rgb(138,226,52)', 'rgb(252,233,79)', 'rgb(114,159,207)', 'rgb(173,127,168)', 'rgb(52,226,226)', 'rgb(238,238,236)']
+use-system-font=false
+use-theme-colors=false
+font='Monospace 14'
+background-color='rgb(43,62,80)'
+scrollbar-policy='always'
+scrollback-lines=10000

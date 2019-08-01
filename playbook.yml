@@ -71,6 +71,34 @@
     become_method: sudo
     become_user: root
     become_flags: '-H'
+  - name: install ruby
+    package:
+      name: ruby
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install cmake
+    package:
+      name: cmake
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install doxygen
+    package:
+      name: doxygen
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+
+  # Import gnome-terminal profiles
+  - name: Import gnome-terminal profiles
+    shell: dconf load /org/gnome/terminal/legacy/profiles:/ < "{{playbook_dir}}/import/gnome-terminal-profiles.dconf"
  
   # BUILD libev from source, if its not installed
   - stat:
@@ -83,7 +111,7 @@
     file: path=/tmp/libev state=absent
     when: not libev_dir.stat.exists
   - name: build libev from source
-    shell: cd /tmp && cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev && cd /tmp/libev && patch -p0 < "{{playbook_dir}}/patches/libev/patch.diff" && libtoolize --force && aclocal && autoheader && automake --force-missing --add-missing && autoconf && PATH="/opt/developerstudio12.6/bin/:$PATH" ./configure --prefix /opt/libev && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
+    shell: cd /tmp && cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev && cd /tmp/libev && patch -p0 < "{{playbook_dir}}/patches/libev/patch.diff" && PATH="/usr/gnu/bin:$PATH" libtoolize --force && aclocal && PATH="/usr/gnu/bin:$PATH" autoheader && PATH="/usr/gnu/bin:$PATH" automake --force-missing --add-missing && autoconf && PATH="/usr/gnu/bin:$PATH" ./configure --prefix /opt/libev && PATH="/usr/gnu/bin:$PATH" make && PATH="/usr/gnu/bin:$PATH" sudo -H make install
     when: not libev_dir.stat.exists
 
   # BUILD xcb-util-xrm from source, if its not installed
@@ -100,6 +128,20 @@
     shell: cd /tmp && git clone --recursive https://github.com/Airblader/xcb-util-xrm.git && cd /tmp/xcb-util-xrm && git submodule update --init && PATH="/usr/gnu/bin/:$PATH" ./autogen.sh --prefix=/opt/xcb-util-xrm && PATH="/usr/gnu/bin/:$PATH" make && PATH="/usr/gnu/bin/:$PATH" sudo -H make install
     when: not xcb_util_xrm_dir.stat.exists
 
+  # BUILD yajl from source, if its not installed
+  - stat:
+      path: /opt/yajl
+    register: yajl_dir
+  - debug:
+      msg: "yajl is build and installed already"
+    when: yajl_dir.stat.isdir is defined and yajl_dir.stat.isdir
+  - name: clean build dir for yajl
+    file: path=/tmp/yajl state=absent
+    when: not yajl_dir.stat.exists
+  - name: build yajl
+    shell: cd /tmp && git clone https://github.com/lloyd/yajl.git && cd yajl && git checkout 1.x && ./configure --prefix=/opt/yajl && make && sudo -H make install
+    when: not yajl_dir.stat.exists
+
   # BUILD i3-gaps from source, if its not installed
   - stat:
       path: /opt/i3-gaps
@@ -111,4 +153,4 @@
     file: path=/tmp/i3-gaps state=absent
     when: not i3_gaps_dir.stat.exists
   - name: install i3-gaps
-    shell: rm -Rf /tmp/i3-gaps && cd /tmp && git clone https://www.github.com/Airblader/i3 i3-gaps && cd /tmp/i3-gaps && git checkout release-4.16.1 && autoreconf --force --install && rm -rf build/ && mkdir -p build && cd build/ && LDFLAGS='-L/opt/libev/lib -L/opt/xcb-util-xrm/lib' PATH="/opt/developerstudio12.6/bin/:$PATH" ../configure --prefix=/opt/i3-gaps --sysconfdir=/etc --disable-sanitizers && PATH="/opt/developerstudio12.6/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin/:$PATH" sudo -H make install
+    shell: cd /tmp && git clone https://www.github.com/Airblader/i3 i3-gaps && cd /tmp/i3-gaps && autoreconf --force --install && rm -rf build/ && mkdir -p build && cd build/ && YAJL_CFLAGS='-I/opt/yajl/include' YAJL_LIBS='-L/opt/yajl/lib' XCB_UTIL_XRM_CFLAGS='-I/opt/xcb-util-xrm/include' XCB_UTIL_XRM_LIBS='-L/opt/xcb-util-xrm/lib' CFLAGS='-I/opt/libev/include' LDFLAGS='-L/opt/libev/lib' PATH="/usr/gnu/bin:$PATH" ../configure --prefix=/opt/i3-gaps --sysconfdir=/etc --disable-sanitizers --disable-debug --enable-docs --enable-mans && PATH="/usr/gnu/bin:$PATH" make -j8 && PATH="/usr/gnu/bin:$PATH" sudo -H make install
