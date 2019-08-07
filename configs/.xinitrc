@@ -73,4 +73,7 @@ fi
 exec /opt/openbox-3.6.1/bin/openbox
 #exec kwin_x11
 #exec sway
-#exec i3
+
+#export LD_LIBRARY_PATH="/opt/xcb-util-xrm/lib:/opt/yajl/lib:/opt/libev/lib:$LD_LIBRARY_PATH"
+#export PATH="/opt/i3-gaps/bin:$PATH"
+#exec /opt/i3-gaps/bin/i3

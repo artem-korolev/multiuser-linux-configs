@@ -7,8 +7,6 @@
 
 
 function detect_repo() {
-	if [ -d ".git" ]
-	then
 		BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
  		if [ ! "${BRANCH}" == "" ]
  		then
@@ -18,9 +16,6 @@ function detect_repo() {
 		else
 			echo ""
 		fi
-	else
-		echo ""
-	fi
 }
 
 alias ls='ls --color=auto'
