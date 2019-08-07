@@ -95,10 +95,32 @@
     become_method: sudo
     become_user: root
     become_flags: '-H'
+  - name: install dtrace
+    package:
+      name: dtrace
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
 
   # Import gnome-terminal profiles
   - name: Import gnome-terminal profiles
     shell: dconf load /org/gnome/terminal/legacy/profiles:/ < "{{playbook_dir}}/import/gnome-terminal-profiles.dconf"
+
+  # BUILD NodeJS 12 from source, if its not installed
+  - stat:
+      path: /opt/nodejs
+    register: nodejs_dir
+  - debug:
+      msg: "NodeJS is build and installed already"
+    when: nodejs_dir.stat.isdir is defined and nodejs_dir.stat.isdir
+  - name: clean build dir for NodeJS
+    file: path=/tmp/nodejs state=absent
+    when: not nodejs_dir.stat.exists
+  - name: build NodeJS from source
+    shell: cd /tmp && wget https://nodejs.org/dist/v12.8.0/node-v12.8.0.tar.gz && tar xvzf node-v12.8.0.tar.gz && cd node-v12.8.0 && PATH="/usr/gnu/bin:/sbin:$PATH" ./configure --prefix=/opt/nodejs && PATH="/usr/gnu/bin:/sbin:$PATH" make && PATH="/usr/gnu/bin:/sbin:$PATH" sudo -H make install
+    when: not nodejs_dir.stat.exists
  
   # BUILD libev from source, if its not installed
   - stat:
