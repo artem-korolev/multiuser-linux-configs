@@ -103,24 +103,164 @@
     become_method: sudo
     become_user: root
     become_flags: '-H'
+  - name: install jdk
+    package:
+      name: jdk
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install zlib
+    package:
+      name: zlib
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install harfbuzz
+    package:
+      name: harfbuzz
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install libpng
+    package:
+      name: libpng
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install freetype-2
+    package:
+      name: freetype-2
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install fontconfig
+    package:
+      name: fontconfig
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install libcanberra
+    package:
+      name: libcanberra
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install imagemagick
+    package:
+      name: imagemagick
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install pygments
+    package:
+      name: pygments
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install glib2
+    package:
+      name: glib2
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install cairo
+    package:
+      name: cairo
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install gtk-doc
+    package:
+      name: gtk-doc
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install pygobject-3
+    package:
+      name: pygobject-3
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+  - name: install clang
+    package:
+      name: clang
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
 
   # Import gnome-terminal profiles
   - name: Import gnome-terminal profiles
     shell: dconf load /org/gnome/terminal/legacy/profiles:/ < "{{playbook_dir}}/import/gnome-terminal-profiles.dconf"
 
-  # BUILD NodeJS 12 from source, if its not installed
+  # BUILD NodeJS 10 from source, if its not installed
+  #- stat:
+  #    path: /opt/nodejs
+  #  register: nodejs_dir
+  #- debug:
+  #    msg: "NodeJS is build and installed already"
+  #  when: nodejs_dir.stat.isdir is defined and nodejs_dir.stat.isdir
+  #- name: clean build dir for NodeJS
+  #  file: path=/tmp/node-v10.16.2 state=absent
+  #  when: not nodejs_dir.stat.exists
+  #- name: build NodeJS from source
+  #  shell: cd /tmp && wget https://nodejs.org/dist/v10.16.2/node-v10.16.2.tar.gz && tar xvzf node-v10.16.2.tar.gz && cd node-v10.16.2 && PATH="/usr/gnu/bin:/sbin:$PATH" ./configure --prefix=/opt/nodejs && PATH="/usr/gnu/bin:/sbin:$PATH" make && PATH="/usr/gnu/bin:/sbin:$PATH" sudo -H make install
+  #  when: not nodejs_dir.stat.exists
+
+  # BUILD harfbuzz from source (higher version is required by kitty), if its not installed
   - stat:
-      path: /opt/nodejs
-    register: nodejs_dir
+      path: /opt/harfbuzz
+    register: harfbuzz_dir
   - debug:
-      msg: "NodeJS is build and installed already"
-    when: nodejs_dir.stat.isdir is defined and nodejs_dir.stat.isdir
-  - name: clean build dir for NodeJS
-    file: path=/tmp/nodejs state=absent
-    when: not nodejs_dir.stat.exists
-  - name: build NodeJS from source
-    shell: cd /tmp && wget https://nodejs.org/dist/v12.8.0/node-v12.8.0.tar.gz && tar xvzf node-v12.8.0.tar.gz && cd node-v12.8.0 && PATH="/usr/gnu/bin:/sbin:$PATH" ./configure --prefix=/opt/nodejs && PATH="/usr/gnu/bin:/sbin:$PATH" make && PATH="/usr/gnu/bin:/sbin:$PATH" sudo -H make install
-    when: not nodejs_dir.stat.exists
+      msg: "harfbuzz is build and installed already"
+    when: harfbuzz_dir.stat.isdir is defined and kitty_dir.stat.isdir
+  - name: clean build dir for harfbuzz
+    file: path=/tmp/harfbuzz state=absent
+    when: not harfbuzz_dir.stat.exists
+  - name: build harfbuzz from source
+    shell: cd /tmp && wget https://github.com/harfbuzz/harfbuzz/archive/2.5.3.tar.gz && (tar xzf 2.5.3.tar.gz || true) && cd harfbuzz-2.5.3 && CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS=-m64 PATH="/usr/gnu/bin/:$PATH" ./autogen.sh --prefix=/opt/harfbuzz && CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS=-m64 PATH="/usr/gnu/bin/:$PATH" make && CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS=-m64 PATH="/usr/gnu/bin/:$PATH" sudo -H make install
+    when: not harfbuzz_dir.stat.exists
+
+  # BUILD kitty terminal emulator from source, if its not installed
+  - stat:
+      path: /opt/kitty
+    register: kitty_dir
+  - debug:
+      msg: "kitty is build and installed already"
+    when: kitty_dir.stat.isdir is defined and kitty_dir.stat.isdir
+  - name: clean build dir for kitty
+    file: path=/tmp/kitty state=absent
+    when: not kitty_dir.stat.exists
+  - name: build kitty from source
+    shell: cd /tmp && git clone https://github.com/kovidgoyal/kitty && cd kitty && CFLAGS="-Wno-error=implicit-function-declaration -Wno-error=return-type -Wno-error=unused-variable -Wno-error=unknown-pragmas" PKG_CONFIG_PATH="/opt/harfbuzz/lib/pkgconfig:$PKG_CONFIG_PATH" PATH="/usr/gnu/bin:$PATH" make
+    when: not kitty_dir.stat.exists
  
   # BUILD libev from source, if its not installed
   - stat:
@@ -133,7 +273,7 @@
     file: path=/tmp/libev state=absent
     when: not libev_dir.stat.exists
   - name: build libev from source
-    shell: cd /tmp && cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev && cd /tmp/libev && patch -p0 < "{{playbook_dir}}/patches/libev/patch.diff" && PATH="/usr/gnu/bin:$PATH" libtoolize --force && aclocal && PATH="/usr/gnu/bin:$PATH" autoheader && PATH="/usr/gnu/bin:$PATH" automake --force-missing --add-missing && autoconf && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin/:$PATH" CC="/opt/developerstudio12.6/bin/cc" CFLAGS=-g ./configure --prefix /opt/libev && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin/:$PATH" make && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin/:$PATH" sudo -H make install
+    shell: cd /tmp && cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev && cd /tmp/libev && patch -p0 < "{{playbook_dir}}/patches/libev/patch.diff" && PATH="/usr/gnu/bin:$PATH" libtoolize --force && aclocal && PATH="/usr/gnu/bin:$PATH" autoheader && PATH="/usr/gnu/bin:$PATH" automake --force-missing --add-missing && autoconf && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin/:$PATH" CC="/opt/developerstudio12.6/bin/cc" CFLAGS=-g ./configure --prefix /opt/libev && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin:$PATH" make && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin/:$PATH" sudo -H make install
     when: not libev_dir.stat.exists
 
   # BUILD xcb-util-xrm from source, if its not installed
