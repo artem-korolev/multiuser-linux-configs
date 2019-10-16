@@ -215,6 +215,15 @@
     become_method: sudo
     become_user: root
     become_flags: '-H'
+  - name: install flex
+    package:
+      name: flex
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
+
 
   # Import gnome-terminal profiles
   - name: Import gnome-terminal profiles
@@ -234,13 +243,30 @@
   #  shell: cd /tmp && wget https://nodejs.org/dist/v10.16.2/node-v10.16.2.tar.gz && tar xvzf node-v10.16.2.tar.gz && cd node-v10.16.2 && PATH="/usr/gnu/bin:/sbin:$PATH" ./configure --prefix=/opt/nodejs && PATH="/usr/gnu/bin:/sbin:$PATH" make && PATH="/usr/gnu/bin:/sbin:$PATH" sudo -H make install
   #  when: not nodejs_dir.stat.exists
 
+  # BUILD gcc-9.2.0 from source
+  - stat:
+      path: /opt/gcc-9.2.0
+    register: gcc920_dir
+  - debug:
+      msg: "gcc-9.2.0 is build and installed already"
+    when: gcc920_dir.stat.isdir is defined and gcc920_dir.stat.isdir
+  - name: clean source dir for gcc-9.2.0
+    file: path=/var/tmp/gcc-9.2.0 state=absent
+    when: not gcc920_dir.stat.exists
+  - name: clean build dir for gcc-9.2.0
+    file: path=/var/tmp/gcc-9.2.0-build state=absent
+    when: not gcc920_dir.stat.exists
+  - name: build gcc-9.2.0 from source
+    shell: cd /var/tmp && mkdir gcc-9.2.0-build && wget https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.gz && tar xvzf gcc-9.2.0.tar.gz && cd gcc-9.2.0 && ./contrib/download_prerequisites && cd ../gcc-9.2.0-build && PATH="/usr/gnu/bin:$PATH" AS=gas LD=ld CC=gcc ../gcc-9.2.0/configure --prefix=/opt/gcc-9.2.0 --with-gnu-as --target x86_64-pc-solarlis2.11 && gmake -j2 && sudo -H gmake install
+    when: not gcc920_dir.stat.exists
+
   # BUILD harfbuzz from source (higher version is required by kitty), if its not installed
   - stat:
       path: /opt/harfbuzz
     register: harfbuzz_dir
   - debug:
       msg: "harfbuzz is build and installed already"
-    when: harfbuzz_dir.stat.isdir is defined and kitty_dir.stat.isdir
+    when: harfbuzz_dir.stat.isdir is defined and harfbuzz_dir.stat.isdir
   - name: clean build dir for harfbuzz
     file: path=/tmp/harfbuzz state=absent
     when: not harfbuzz_dir.stat.exists
