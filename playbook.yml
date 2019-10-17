@@ -223,6 +223,14 @@
     become_method: sudo
     become_user: root
     become_flags: '-H'
+  - name: install pod2man
+    package:
+      name: pod2man
+      state: present
+    become: true
+    become_method: sudo
+    become_user: root
+    become_flags: '-H'
 
 
   # Import gnome-terminal profiles
@@ -257,7 +265,13 @@
     file: path=/var/tmp/gcc-9.2.0-build state=absent
     when: not gcc920_dir.stat.exists
   - name: build gcc-9.2.0 from source
-    shell: cd /var/tmp && mkdir gcc-9.2.0-build && wget https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.gz && tar xvzf gcc-9.2.0.tar.gz && cd gcc-9.2.0 && ./contrib/download_prerequisites && cd ../gcc-9.2.0-build && PATH="/usr/gnu/bin:$PATH" AS=gas LD=ld CC=gcc ../gcc-9.2.0/configure --prefix=/opt/gcc-9.2.0 --with-gnu-as --target x86_64-pc-solarlis2.11 && gmake -j2 && sudo -H gmake install
+    shell: cd /var/tmp && mkdir gcc-9.2.0-build && wget https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.gz && tar xvzf gcc-9.2.0.tar.gz && cd gcc-9.2.0 && ./contrib/download_prerequisites && cd ../gcc-9.2.0-build && AS=gas LD=ld CC=gcc ../gcc-9.2.0/configure --prefix=/opt/gcc-9.2.0 --with-gnu-as --target x86_64-pc-solarlis2.11 && gmake -j2 && sudo -H gmake install
+    when: not gcc920_dir.stat.exists
+  - name: clean source dir for gcc-9.2.0
+    file: path=/var/tmp/gcc-9.2.0 state=absent
+    when: not gcc920_dir.stat.exists
+  - name: clean build dir for gcc-9.2.0
+    file: path=/var/tmp/gcc-9.2.0-build state=absent
     when: not gcc920_dir.stat.exists
 
   # BUILD harfbuzz from source (higher version is required by kitty), if its not installed
@@ -271,7 +285,7 @@
     file: path=/tmp/harfbuzz state=absent
     when: not harfbuzz_dir.stat.exists
   - name: build harfbuzz from source
-    shell: cd /tmp && wget https://github.com/harfbuzz/harfbuzz/archive/2.5.3.tar.gz && (tar xzf 2.5.3.tar.gz || true) && cd harfbuzz-2.5.3 && CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS=-m64 PATH="/usr/gnu/bin/:$PATH" ./autogen.sh --prefix=/opt/harfbuzz && CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS=-m64 PATH="/usr/gnu/bin/:$PATH" make && CFLAGS=-m64 CPPFLAGS=-m64 LDFLAGS=-m64 PATH="/usr/gnu/bin/:$PATH" sudo -H make install
+    shell: cd /tmp && wget https://github.com/harfbuzz/harfbuzz/archive/2.5.3.tar.gz && (tar xzf 2.5.3.tar.gz || true) && cd harfbuzz-2.5.3 && AS=gas LD=ld CC=gcc ./autogen.sh --prefix=/opt/harfbuzz --target x86_64-pc-solarlis2.11 && gmake -j2 && sudo -H gmake install
     when: not harfbuzz_dir.stat.exists
 
   # BUILD kitty terminal emulator from source, if its not installed
@@ -299,7 +313,7 @@
     file: path=/tmp/libev state=absent
     when: not libev_dir.stat.exists
   - name: build libev from source
-    shell: cd /tmp && cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev && cd /tmp/libev && patch -p0 < "{{playbook_dir}}/patches/libev/patch.diff" && PATH="/usr/gnu/bin:$PATH" libtoolize --force && aclocal && PATH="/usr/gnu/bin:$PATH" autoheader && PATH="/usr/gnu/bin:$PATH" automake --force-missing --add-missing && autoconf && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin/:$PATH" CC="/opt/developerstudio12.6/bin/cc" CFLAGS=-g ./configure --prefix /opt/libev && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin:$PATH" make && PATH="/opt/developerstudio12.6/bin:/usr/gnu/bin/:$PATH" sudo -H make install
+    shell: cd /tmp && cvs -z3 -d :pserver:anonymous@cvs.schmorp.de/schmorpforge co libev && cd /tmp/libev && libtoolize --force && aclocal && autoheader && automake --force-missing --add-missing && autoconf && AS=gas LD=ld CC=gcc ./configure --prefix /opt/libev && PATH="/usr/perl5/5.22/bin:$PATH" gmake && sudo -H gmake install
     when: not libev_dir.stat.exists
 
   # BUILD xcb-util-xrm from source, if its not installed
