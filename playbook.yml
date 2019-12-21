@@ -341,7 +341,7 @@
     file: path=/tmp/yajl state=absent
     when: not yajl_dir.stat.exists
   - name: build yajl
-    shell: cd /tmp && git clone https://github.com/lloyd/yajl.git && cd yajl && CC="/opt/developerstudio12.6/bin/cc" ./configure --prefix /opt/yajl && make && sudo -H make install
+    shell: cd /tmp && git clone https://github.com/lloyd/yajl.git && cd yajl && AS=as LD=ld CC=gcc ./configure --prefix /opt/yajl && gmake -j2 && sudo -H gmake install
     when: not yajl_dir.stat.exists
 
   # BUILD i3-gaps from source, if its not installed
@@ -355,4 +355,4 @@
     file: path=/tmp/i3-gaps state=absent
     when: not i3_gaps_dir.stat.exists
   - name: install i3-gaps
-    shell: cd /tmp && git clone https://www.github.com/Airblader/i3.git i3-gaps && cd /tmp/i3-gaps && git checkout release-4.16.1 && git apply "{{playbook_dir}}/patches/i3-gaps/patch.diff" && autoreconf --force --install && rm -rf build/ && mkdir -p build && cd build/ && PKG_CONFIG_PATH="/opt/yajl/share/pkgconfig:/opt/xcb-util-xrm/lib/pkgconfig:$PKG_CONFIG_PATH" CFLAGS='-I/opt/libev/include -I/opt/xcb-util-xrm/include -I/opt/yajl/include' LDFLAGS='-L/opt/libev/lib -L/opt/xcb-util-xrm/lib -L/opt/yajl/lib' PATH="/usr/gnu/bin:$PATH" ../configure --prefix=/opt/i3-gaps --sysconfdir=/etc --datarootdir=/usr/share --disable-sanitizers --disable-debug --enable-docs --enable-mans && PATH="/usr/gnu/bin:$PATH" make -j8 && PATH="/usr/gnu/bin:$PATH" sudo -H make install
+    shell: cd /var/tmp && git clone https://www.github.com/Airblader/i3.git i3-gaps && cd /var/tmp/i3-gaps && git checkout release-4.16.1 && git apply "{{playbook_dir}}/patches/i3-gaps/patch.diff" && autoreconf --force --install && rm -rf build/ && mkdir -p build && cd build/ && PKG_CONFIG_PATH="/opt/yajl/share/pkgconfig:/opt/xcb-util-xrm/lib/pkgconfig:$PKG_CONFIG_PATH" CFLAGS='-I/opt/libev/include -I/opt/xcb-util-xrm/include -I/opt/yajl/include' LDFLAGS='-L/opt/libev/lib -L/opt/xcb-util-xrm/lib -L/opt/yajl/lib' PATH="/usr/gnu/bin:$PATH" ../configure --prefix=/opt/i3-gaps --sysconfdir=/etc --datarootdir=/usr/share --disable-sanitizers --disable-debug --enable-docs --enable-mans && PATH="/usr/gnu/bin:$PATH" make -j8 && PATH="/usr/gnu/bin:$PATH" sudo -H make install
