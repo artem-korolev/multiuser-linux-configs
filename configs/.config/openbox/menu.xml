@@ -2,71 +2,18 @@
 
 <openbox_menu xmlns="http://openbox.org/3.4/menu">
 
-<menu id="apps-accessories-menu" label="Accessories">
-  <item label="Calculator">
+<menu id="dev" label="Development">
+  <item label="Eclipse Rust">
     <action name="Execute">
-      <command>gnome-calculator</command>
+      <command>/opt/eclipse-rust-2019-12-R-incubation-linux-gtk-x86_64/eclipse/eclipse</command>
       <startupnotify>
         <enabled>yes</enabled>
       </startupnotify>
     </action>
   </item>
-  <item label="Character Map">
+  <item label="VSCode OSS">
     <action name="Execute">
-      <command>gnome-character-map</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Ark File Archiver">
-    <action name="Execute">
-      <command>ark</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
-</menu>
-
-<menu id="apps-editors-menu" label="Editors">
-  <item label="GVim">
-    <action name="Execute">
-      <command>gvim</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-        <wmclass>GVim</wmclass>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Emacs">
-    <action name="Execute">
-      <command>emacs</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-        <wmclass>Emacs</wmclass>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="GEdit">
-    <action name="Execute">
-      <command>gedit</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Kate">
-    <action name="Execute">
-      <command>kate</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Kwrite">
-    <action name="Execute">
-      <command>kwrite</command>
+      <command>flatpak run com.visualstudio.code.oss</command>
       <startupnotify>
         <enabled>yes</enabled>
       </startupnotify>
@@ -75,27 +22,6 @@
 </menu>
 
 <menu id="apps-term-menu" label="Terminals">
-  <item label="Rxvt Unicode">
-    <action name="Execute">
-      <command>urxvt</command>
-    </action>
-  </item>
-  <item label="Gnome Terminal">
-    <action name="Execute">
-      <command>gnome-terminal</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Xfce Terminal">
-    <action name="Execute">
-      <command>xfce4-terminal</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
   <item label="Konsole">
     <action name="Execute">
       <command>konsole</command>
@@ -103,9 +29,6 @@
         <enabled>yes</enabled>
       </startupnotify>
     </action>
-  </item>
-  <item label="Xterm">
-    <action name="Execute"><command>xterm</command></action>
   </item>
 </menu>
 
@@ -373,13 +296,13 @@
 
 <menu id="root-menu" label="Openbox 3">
   <separator label="Applications" />
-  <menu id="apps-accessories-menu"/>
+  <menu id="apps-term-menu"/>
+  <menu id="dev"/>
   <menu id="apps-editors-menu"/>
   <menu id="apps-graphics-menu"/>
   <menu id="apps-net-menu"/>
   <menu id="apps-office-menu"/>
   <menu id="apps-multimedia-menu"/>
-  <menu id="apps-term-menu"/>
   <menu id="apps-fileman-menu"/>
   <separator label="System" />
   <menu id="system-menu"/>
